@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import static com.craftinginterpreters.lox.TokenType.*;
 
 class Scanner {
@@ -14,6 +15,7 @@ class Scanner {
     private int line = 1;
 
     private static final Map<String, TokenType> keywords;
+
     static {
         keywords = new HashMap<>();
         keywords.put("and", AND);
@@ -55,23 +57,51 @@ class Scanner {
         switch (c) {
             // (( )){}          (grouping stuff)
 
-            case '(': addToken(LEFT_PAREN); break;
-            case ')': addToken(RIGHT_PAREN); break;
-            case '{': addToken(LEFT_BRACE); break;
-            case '}': addToken(RIGHT_BRACE); break;
-            case ',': addToken(COMMA); break;
-            case '.': addToken(DOT); break;
+            case '(':
+                addToken(LEFT_PAREN);
+                break;
+            case ')':
+                addToken(RIGHT_PAREN);
+                break;
+            case '{':
+                addToken(LEFT_BRACE);
+                break;
+            case '}':
+                addToken(RIGHT_BRACE);
+                break;
+            case ',':
+                addToken(COMMA);
+                break;
+            case '.':
+                addToken(DOT);
+                break;
 
             // !*+-/=<> <= ==   (operators)
 
-            case '-': addToken(MINUS); break;
-            case '+': addToken(PLUS); break;
-            case ';': addToken(SEMICOLON); break;
-            case '*': addToken(STAR); break;
-            case '!': addToken(match('=') ? BANG_EQUAL : BANG); break;
-            case '=': addToken(match('=') ? EQUAL_EQUAL : EQUAL); break;
-            case '<': addToken(match('=') ? LESS_EQUAL : LESS); break;
-            case '>': addToken(match('=') ? GREATER_EQUAL : GREATER); break;
+            case '-':
+                addToken(MINUS);
+                break;
+            case '+':
+                addToken(PLUS);
+                break;
+            case ';':
+                addToken(SEMICOLON);
+                break;
+            case '*':
+                addToken(STAR);
+                break;
+            case '!':
+                addToken(match('=') ? BANG_EQUAL : BANG);
+                break;
+            case '=':
+                addToken(match('=') ? EQUAL_EQUAL : EQUAL);
+                break;
+            case '<':
+                addToken(match('=') ? LESS_EQUAL : LESS);
+                break;
+            case '>':
+                addToken(match('=') ? GREATER_EQUAL : GREATER);
+                break;
             case '/':
                 if (match('/')) {
                     // A comment goes until the end of the line.
@@ -83,10 +113,14 @@ class Scanner {
 
             // scan strings
             case ' ', '\r', '\t':
-            // Ignore whitespace.
+                // Ignore whitespace.
                 break;
-            case '\n': line++; break;
-            case '"': string(); break;
+            case '\n':
+                line++;
+                break;
+            case '"':
+                string();
+                break;
 
             // scan for "or"
             case 'o':
@@ -171,6 +205,7 @@ class Scanner {
                 (c >= 'A' && c <= 'Z') ||
                 c == '_';
     }
+
     private boolean isAlphaNumeric(char c) {
         return isAlpha(c) || isDigit(c);
     }
@@ -186,9 +221,11 @@ class Scanner {
     private char advance() {
         return source.charAt(current++);
     }
+
     private void addToken(TokenType type) {
         addToken(type, null);
     }
+
     private void addToken(TokenType type, Object literal) {
         String text = source.substring(start, current);
         tokens.add(new Token(type, text, literal, line));
